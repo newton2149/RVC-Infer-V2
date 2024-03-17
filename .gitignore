@@ -1,0 +1,9 @@
+*.exe
+*.pt
+*.onnx
+*pth
+*.pyc
+
+logs
+env
+venv
