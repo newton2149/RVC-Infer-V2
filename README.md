@@ -46,10 +46,6 @@ python3 inferV2.py infer --f0up_key 12 --filter_radius 0 --index_rate 0.0 --hop_
 #### Batch Inference
 
 ```bash
-python3 inferV2.py infer --f0up_key 12 --filter_radius 0 --index_rate 0.0 --hop_length 100 --rms_mix_rate 0.0 --protect 0.5  --f0autotune True --f0method rmvpe --input_path ./test-wavs/LJ001-0001.wav --output_path ./output/test.wav --pth_path "./logs/models/weights/lj-ten.pth"  --index_path "./logs/models/weights/lj-ten.pth" --split_audio True --clean_audio True --clean_strength 0.7 --export_format WAV
-```
-
-```bash
 python main.py batch_infer --f0up_key 12 --filter_radius 0 --index_rate 0.0 --hop_length 100 --rms_mix_rate 0.0 --protect 0.5 --f0autotune True --f0method rmvpe --input_folder_path ./test-wavs/ --output_folder_path ./output/results --pth_path "./logs/models/weights/lj-ten.pth" --index_path "./logs/models/weights/lj-ten.pth" --split_audio True --clean_audio True --clean_strength 0.7 --export_format WAV
 ```
 
