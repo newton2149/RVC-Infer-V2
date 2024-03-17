@@ -2,18 +2,6 @@
 
 
 
-### Table of Contents
-
-1. [Installation](#installation)
-   - [Windows](#windows)
-   - [Linux](#linux)
-2. [Getting Started](#getting-started)
-   - [Inference](#inference)
-   - [Training](#training)
-   - [Additional Features](#additional-features)
-3. [API](#api)
-4. [Credits](#credits)
-
 ### Installation
 
 Ensure that you have the necessary Python packages installed by following these steps (Python 3.9 is recommended):
@@ -103,10 +91,6 @@ python trainv2.py preprocess --model_name "lj-ten" --dataset_path ./test-wavs --
 _Refer to `python main.py preprocess -h` for additional help._
 
 #### Extract Features
-
-```bash
-python main.py extract --model_name "model_name" --rvc_version "rvc_version" --f0method "f0method" --hop_length "hop_length" --sampling_rate "sampling_rate"
-```
 
 ```bash
 python trainv2.py extract --model_name "lj-ten" --rvc_version "v2" --f0method rmvpe --hop_length 100 --sampling_rate 48000
