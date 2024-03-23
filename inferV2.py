@@ -2,6 +2,12 @@ import os
 import sys
 import argparse
 import subprocess
+import requests
+from fastapi import HTTPException
+from fastapi.responses import FileResponse
+import random
+import zipfile
+import shutil
 
 now_dir = os.getcwd()
 sys.path.append(now_dir)
@@ -12,6 +18,34 @@ from rvc.configs.config import Config
 config = Config()
 current_script_directory = os.path.dirname(os.path.realpath(__file__))
 logs_path = os.path.join(current_script_directory, "logs")
+
+os.makedirs('./temp_db', exist_ok=True)
+os.makedirs('./temp_db/download', exist_ok=True)
+
+
+def zip_wav_files(input_dir, output_zip):
+    with zipfile.ZipFile(output_zip, 'w') as zipf:
+        for root, _, files in os.walk(input_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, input_dir)
+                zipf.write(file_path, arcname=arcname)
+
+def download_file_from_firebase_storage(download_url, output_file_path):
+    response = requests.get(download_url)
+    if response.status_code == 200:
+        with open(output_file_path, 'wb') as f:
+            f.write(response.content)
+        print("File downloaded successfully.")
+    else:
+        raise HTTPException(status_code=response.status_code,
+                            detail=f"Failed to download file. Status code: {response.status_code}")
+        
+def extract_zip(zip_file_path, extract_to='inference_db'):
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        os.makedirs(extract_to, exist_ok=True)
+        zip_ref.extractall(extract_to)
+        return os.path.join(extract_to, zip_ref.namelist()[0])
 
 # Check for prerequisites
 subprocess.run(
@@ -37,7 +71,8 @@ def run_infer_script(
     clean_strength,
     export_format,
 ):
-    infer_script_path = os.path.join("rvc", "infer", "infer.py")
+    
+    infer_script_path = os.path.join("rvc", "infer", "infer-realtime.py")
     command = [
         "python",
         *map(
@@ -64,7 +99,8 @@ def run_infer_script(
         ),
     ]
     subprocess.run(command)
-    return f"File {input_path} inferred successfully.", output_path
+    os.remove(input_path)
+    return FileResponse(output_path)
 
 
 # Batch infer
@@ -86,53 +122,64 @@ def run_batch_infer_script(
     clean_strength,
     export_format,
 ):
-    infer_script_path = os.path.join("rvc", "infer", "infer.py")
+    try : 
+        
+        
+        # input_folder = '/home/navneeth/EgoPro/dnn/RVC_CLI/inference_db/test-wavs'
+        
+        infer_script_path = os.path.join("rvc", "infer", "infer.py")
 
-    audio_files = [
-        f for f in os.listdir(input_folder) if f.endswith((".mp3", ".wav", ".flac"))
-    ]
-    print(f"Detected {len(audio_files)} audio files for inference.")
-
-    for audio_file in audio_files:
-        if "_output" in audio_file:
-            pass
-        else:
-            input_path = os.path.join(input_folder, audio_file)
-            output_file_name = os.path.splitext(os.path.basename(audio_file))[0]
-            output_path = os.path.join(
-                output_folder,
-                f"{output_file_name}_output{os.path.splitext(audio_file)[1]}",
-            )
-            print(f"Inferring {input_path}...")
-
-        command = [
-            "python",
-            *map(
-                str,
-                [
-                    infer_script_path,
-                    f0up_key,
-                    filter_radius,
-                    index_rate,
-                    hop_length,
-                    f0method,
-                    input_path,
-                    output_path,
-                    pth_path,
-                    index_path,
-                    split_audio,
-                    f0autotune,
-                    rms_mix_rate,
-                    protect,
-                    clean_audio,
-                    clean_strength,
-                    export_format,
-                ],
-            ),
+        audio_files = [
+            f for f in os.listdir(input_folder) if f.endswith((".mp3", ".wav", ".flac"))
         ]
-        subprocess.run(command)
+        print(f"Detected {len(audio_files)} audio files for inference.")
 
-    return f"Files from {input_folder} inferred successfully."
+        for audio_file in audio_files:
+            if "_output" in audio_file:
+                pass
+            else:
+                input_path = os.path.join(input_folder, audio_file)
+                output_file_name = os.path.splitext(os.path.basename(audio_file))[0]
+                output_path = os.path.join(
+                    output_folder,
+                    f"{output_file_name}_output{os.path.splitext(audio_file)[1]}",
+                )
+                print(f"Inferring {input_path}...")
+
+            command = [
+                "python",
+                *map(
+                    str,
+                    [
+                        infer_script_path,
+                        f0up_key,
+                        filter_radius,
+                        index_rate,
+                        hop_length,
+                        f0method,
+                        input_path,
+                        output_path,
+                        pth_path,
+                        index_path,
+                        split_audio,
+                        f0autotune,
+                        rms_mix_rate,
+                        protect,
+                        clean_audio,
+                        clean_strength,
+                        export_format,
+                    ],
+                ),
+            ]
+            subprocess.run(command)
+            
+        
+        
+
+        return FileResponse(output_folder + '.zip')
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
 
 
 # Parse arguments

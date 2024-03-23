@@ -19,6 +19,9 @@ config = Config()
 current_script_directory = os.path.dirname(os.path.realpath(__file__))
 logs_path = os.path.join(current_script_directory, "logs")
 
+os.makedirs('./train_db', exist_ok=True)
+os.makedirs('./train_db/dataset', exist_ok=True)
+
 # Check for prerequisites
 subprocess.run(
     ["python", os.path.join("rvc", "lib", "tools", "prerequisites_download.py")]

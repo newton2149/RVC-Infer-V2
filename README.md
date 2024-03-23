@@ -173,11 +173,11 @@ To use the RVC CLI via the API, utilize the provided script. Make API requests t
 
 Make POST requests to these endpoints with the same required parameters as in CLI mode.
 
-### Example for Infer
+### Example for Realtime Infer
 
 ```bash
 
-{
+ {
   "f0up_key": 0,
   "filter_radius": 3,
   "index_rate": 0.0,
@@ -185,10 +185,25 @@ Make POST requests to these endpoints with the same required parameters as in CL
   "protect": 0.33,
   "hop_length": 128,
   "f0method": "rmvpe",
-  "input_path": "./test-wavs/LJ001-0001.wav",
-  "output_path": "./output/test3.wav",
-  "pth_path": "./logs/models/weights/lj-ten.pth",
-  "index_path": "./logs/models/weights/lj-ten.pth",
+  "input_path": "https://firebasestorage.googleapis.com/v0/b/intenrship-e76b3.appspot.com/o/LJ001-0001.wav?alt=media&token=37bf871f-f2f2-4807-a37f-b5f297151877",
+  "split_audio": True,
+  "f0autotune": True,
+  "clean_audio": True,
+  "clean_strength": 0.7,
+  "export_format": "WAV"
+ }
+
+ # Batch Infer
+
+ {
+  "f0up_key": 0,
+  "filter_radius": 3,
+  "index_rate": 0.0,
+  "rms_mix_rate": 1,
+  "protect": 0.33,
+  "hop_length": 128,
+  "f0method": "rmvpe",
+  "input_folder": "https://firebasestorage.googleapis.com/v0/b/intenrship-e76b3.appspot.com/o/test-wavs.zip?alt=media&token=524cdae1-bc78-4b0f-ac12-a570c0e5833a",
   "split_audio": true,
   "f0autotune": true,
   "clean_audio": true,
@@ -196,6 +211,42 @@ Make POST requests to these endpoints with the same required parameters as in CL
   "export_format": "WAV"
 }
 
+# Preprocess
+
+{
+  "model_name": "fb",
+  "dataset_path": "https://firebasestorage.googleapis.com/v0/b/intenrship-e76b3.appspot.com/o/test-wavs.zip?alt=media&token=524cdae1-bc78-4b0f-ac12-a570c0e5833a",
+  "sampling_rate": 48000
+}
+
+# Extract
+
+{
+  "model_name": "fb",
+  "rvc_version": "v2",
+  "f0method": "rmvpe",
+  "hop_length": 128,
+  "sampling_rate": 48000
+}
+
+# train
+
+{
+  "model_name": "fb",
+  "rvc_version": "v2",
+  "save_every_epoch": true,
+  "save_only_latest": true,
+  "save_every_weights": true,
+  "total_epoch": 10,
+  "sampling_rate": 48000,
+  "batch_size": 16,
+  "gpu": 0,
+  "pitch_guidance": true,
+  "pretrained": true,
+  "custom_pretrained": true,
+  "g_pretrained_path": "./pretraineds/pretrained_v2/G48k.pth",
+  "d_pretrained_path": ./pretraineds/pretrained_v2/D48k.pth
+}
 ```
 
 

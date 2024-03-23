@@ -48,3 +48,4 @@ edge-tts==6.1.9
 pydantic
 fastapi
 uvicorn
+websockets
