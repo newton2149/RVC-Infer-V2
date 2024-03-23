@@ -15,6 +15,9 @@ Execute the [install.bat](./install.bat) file to activate a Conda environment. A
 ```bash
 chmod +x install.sh
 ./install.sh
+
+cd rvc/lib/tools
+python3 prerequisites_download.py 
 ```
 
 ### Inference
