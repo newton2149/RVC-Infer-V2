@@ -175,4 +175,29 @@ To use the RVC CLI via the API, utilize the provided script. Make API requests t
 
 Make POST requests to these endpoints with the same required parameters as in CLI mode.
 
+### Example for Infer
+
+```bash
+
+{
+  "f0up_key": 0,
+  "filter_radius": 3,
+  "index_rate": 0.0,
+  "rms_mix_rate": 1,
+  "protect": 0.33,
+  "hop_length": 128,
+  "f0method": "rmvpe",
+  "input_path": "./test-wavs/LJ001-0001.wav",
+  "output_path": "./output/test3.wav",
+  "pth_path": "./logs/models/weights/lj-ten.pth",
+  "index_path": "./logs/models/weights/lj-ten.pth",
+  "split_audio": true,
+  "f0autotune": true,
+  "clean_audio": true,
+  "clean_strength": 0.7,
+  "export_format": "WAV"
+}
+
+```
+
 
