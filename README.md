@@ -141,11 +141,6 @@ python trainv2 index --model_name "lj-ten" --rvc_version "v2"
 | `rvc_version`  | Yes      |         | v1 or v2          | Version of the model |
 
 
-
-### Additional Features
-                                         |
-
-
 #### Launch TensorBoard
 
 ```bash

@@ -4,24 +4,7 @@ import sys
 
 url_base = "https://huggingface.co/IAHispano/Applio/resolve/main/Resources"
 models_download = [
-    (
-        "pretrained_v1/",
-        [
-            "D32k.pth",
-            "D40k.pth",
-            "D48k.pth",
-            "G32k.pth",
-            "G40k.pth",
-            "G48k.pth",
-            "f0D32k.pth",
-            "f0D40k.pth",
-            "f0D48k.pth",
-            "f0G32k.pth",
-            "f0G40k.pth",
-            "f0G48k.pth",
-        ],
-    ),
-    (
+        (
         "pretrained_v2/",
         [
             "D32k.pth",
@@ -50,7 +33,6 @@ models_file = [
 executables_file = ["ffmpeg.exe", "ffprobe.exe"]
 
 folder_mapping = {
-    "pretrained_v1/": "rvc/pretraineds/pretrained_v1/",
     "pretrained_v2/": "rvc/pretraineds/pretrained_v2/",
 }
 
