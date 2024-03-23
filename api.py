@@ -80,7 +80,13 @@ def run_script(script_function, data):
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
 
-app = FastAPI()
+app = FastAPI(
+    title="RVC_API",
+    version="1.0",
+    description="API for RVC",
+    docs_url="/docs",
+    
+)
 os.makedirs("output", exist_ok=True)
 
 @app.post("/infer/{lang}")
