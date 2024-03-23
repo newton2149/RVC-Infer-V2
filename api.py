@@ -1,61 +1,56 @@
-from fastapi import FastAPI, Request
-import subprocess
+from fastapi import FastAPI,HTTPException
 import time
+
+from inferV2 import run_batch_infer_script,run_infer_script
+from trainv2 import run_preprocess_script,run_extract_script,run_train_script,run_index_script
+from model import TrainInputData,IndexInputData,PreprocessInputData,ExtractInputData,InputData , BatchInputData
+
 
 app = FastAPI()
 
 
-# Helper function to execute commands
-def execute_command(command):
+    
+def run_script(script_function, data):
     try:
-        result = subprocess.run(command, capture_output=True, text=True)
-        return {"output": result.stdout, "error": result.stderr}
-    except Exception as e:
-        return {"error": str(e)}
+        result = script_function(**data.dict())
+        return {"message": result}
+
+    except ValueError as value_error:
+        raise HTTPException(status_code=400, detail=str(value_error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
 
 
 # Infer
 @app.post("/infer")
-async def infer(request: Request):
-    command = ["python", "main.py", "infer"] + await request.json()
-    return execute_command(command)
-
+async def infer(data: InputData):
+    return run_script(run_infer_script, data)
 
 # Batch Infer
 @app.post("/batch_infer")
-async def batch_infer(request: Request):
-    command = ["python", "main.py", "batch_infer"] + await request.json()
-    return execute_command(command)
-
-
-
+async def batch_infer(data: BatchInputData):
+    return run_script(run_batch_infer_script, data)
 
 # Preprocess
 @app.post("/preprocess")
-async def preprocess(request: Request):
-    command = ["python", "main.py", "preprocess"] + await request.json()
-    return execute_command(command)
-
+async def preprocess(data: PreprocessInputData):
+    return run_script(run_preprocess_script, data)
 
 # Extract
 @app.post("/extract")
-async def extract(request: Request):
-    command = ["python", "main.py", "extract"] + await request.json()
-    return execute_command(command)
-
+async def extract(data: ExtractInputData):
+    return run_script(run_extract_script, data)
 
 # Train
 @app.post("/train")
-async def train(request: Request):
-    command = ["python", "main.py", "train"] + await request.json()
-    return execute_command(command)
-
+async def train(data: TrainInputData):
+    return run_script(run_train_script, data)
 
 # Index
 @app.post("/index")
-async def index(request: Request):
-    command = ["python", "main.py", "index"] + await request.json()
-    return execute_command(command)
+async def index(data: IndexInputData):
+    return run_script(run_index_script, data)
+
 
 
 
