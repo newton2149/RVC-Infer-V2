@@ -146,48 +146,6 @@ async def infer(lang: str, data: str = Form(...), file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# @app.post("/infer/{lang}")
-# async def infer(lang: str, data: InputRequest,file: UploadFile = File()):
-    
-        
-#     # os.makedirs("output", exist_ok=True)
-#     # os.makedirs("temp_db/download", exist_ok=True)
-    
-#     content = await file.read()
-#     local_path = f'./temp_db/download/{random.randint(0, 100000)}.wav'
-#     with open(local_path, "wb") as f:
-#         f.write(content)
-        
-    
-    
-#     data = InputData(**data.model_dump())
-    
-#     data.pth_path = model_map[lang]
-#     data.index_path = model_map[lang]
-#     data.output_path = f'./output/{random.randint(0, 1000)}.wav'
-    
-    
-    
-#     data.input_path = local_path
-    
-#     run_script(run_infer_script, data)
-    
-#     if not os.path.exists(data.output_path):
-#         return Response(status_code=status.HTTP_404_NOT_FOUND)
-    
-#     def stream_file():
-#         with open(data.output_path, "rb") as file:
-#             while True:
-#                 chunk = file.read(65536)  # Read 64 KB chunks
-#                 if not chunk:
-#                     break
-#                 yield chunk
-    
-#     response = StreamingResponse(stream_file(), media_type="audio/wav")
-    
-#     shutil.rmtree('./temp_db/download/')
-    
-#     return response
 
 # Batch Infer
 @app.post("/batch_infer/{lang}")
