@@ -1,4 +1,4 @@
-from fastapi import FastAPI,HTTPException,Response,status,WebSocket
+from fastapi import FastAPI,HTTPException,Response,status,WebSocket,UploadFile,File,Form
 import time
 import os
 from inferV2 import run_batch_infer_script,run_infer_script
@@ -7,11 +7,11 @@ from model import TrainInputData,IndexInputData,PreprocessInputData,ExtractInput
 from fastapi.responses import StreamingResponse
 import shutil
 import random
-
+from typing import Optional
 import requests
 from fastapi import HTTPException
 from fastapi.responses import FileResponse
-
+import json
 import random
 import zipfile
 import shutil
@@ -90,41 +90,104 @@ app = FastAPI(
 os.makedirs("output", exist_ok=True)
 
 @app.post("/infer/{lang}")
-async def infer(lang: str, data: InputRequest):
+async def infer(lang: str, data: str = Form(...), file: UploadFile = File(...)):
     
-        
+    data = data.replace(" ", "")
+    data = json.loads(data)
+    print(data)
+    print(type(data))
+    
+    if lang not in model_map:
+        raise HTTPException(status_code=400, detail="Unsupported language")
+
+    # Create directories if they don't exist
     os.makedirs("output", exist_ok=True)
     os.makedirs("temp_db/download", exist_ok=True)
+
+    try:
+        # Save the uploaded WAV file to a temporary directory
+        local_path = f'./temp_db/download/{random.randint(0, 100000)}.wav'
+        with open(local_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
+        # Create InputData object from InputRequest
+        data_obj = InputData(**data)
+
+        # Set paths in InputData
+        data_obj.pth_path = model_map[lang]
+        data_obj.index_path = model_map[lang]
+        data_obj.output_path = f'./output/{random.randint(0, 1000)}.wav'
+        data_obj.input_path = local_path
+
+        # Run inference script
+        run_script(run_infer_script, data_obj)
+
+        # Check if output file exists
+        if not os.path.exists(data_obj.output_path):
+            raise HTTPException(status_code=500, detail="Inference failed")
+
+        # Stream the output file as a response
+        def stream_file():
+            with open(data_obj.output_path, "rb") as file:
+                while True:
+                    chunk = file.read(65536)  # Read 64 KB chunks
+                    if not chunk:
+                        break
+                    yield chunk
+
+        response = StreamingResponse(stream_file(), media_type="audio/wav")
+
+        # Clean up temporary directory
+        shutil.rmtree('./temp_db/download/')
+
+        return response
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# @app.post("/infer/{lang}")
+# async def infer(lang: str, data: InputRequest,file: UploadFile = File()):
+    
+        
+#     # os.makedirs("output", exist_ok=True)
+#     # os.makedirs("temp_db/download", exist_ok=True)
+    
+#     content = await file.read()
+#     local_path = f'./temp_db/download/{random.randint(0, 100000)}.wav'
+#     with open(local_path, "wb") as f:
+#         f.write(content)
+        
     
     
-    data = InputData(**data.model_dump())
+#     data = InputData(**data.model_dump())
     
-    data.pth_path = model_map[lang]
-    data.index_path = model_map[lang]
-    data.output_path = f'./output/{random.randint(0, 1000)}.wav'
+#     data.pth_path = model_map[lang]
+#     data.index_path = model_map[lang]
+#     data.output_path = f'./output/{random.randint(0, 1000)}.wav'
     
-    local_path = f'./temp_db/download/{random.randint(0, 100000)}.wav'
-    download_file_from_firebase_storage(data.input_path,local_path)
-    data.input_path = local_path
     
-    run_script(run_infer_script, data)
     
-    if not os.path.exists(data.output_path):
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+#     data.input_path = local_path
     
-    def stream_file():
-        with open(data.output_path, "rb") as file:
-            while True:
-                chunk = file.read(65536)  # Read 64 KB chunks
-                if not chunk:
-                    break
-                yield chunk
+#     run_script(run_infer_script, data)
     
-    response = StreamingResponse(stream_file(), media_type="audio/wav")
+#     if not os.path.exists(data.output_path):
+#         return Response(status_code=status.HTTP_404_NOT_FOUND)
     
-    shutil.rmtree('./temp_db/download/')
+#     def stream_file():
+#         with open(data.output_path, "rb") as file:
+#             while True:
+#                 chunk = file.read(65536)  # Read 64 KB chunks
+#                 if not chunk:
+#                     break
+#                 yield chunk
     
-    return response
+#     response = StreamingResponse(stream_file(), media_type="audio/wav")
+    
+#     shutil.rmtree('./temp_db/download/')
+    
+#     return response
 
 # Batch Infer
 @app.post("/batch_infer/{lang}")

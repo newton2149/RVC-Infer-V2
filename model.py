@@ -64,7 +64,7 @@ class InputData(BaseModel):
     protect : float
     hop_length: int
     f0method:str
-    input_path:str  
+    input_path:Optional[str] = None  
     output_path: Optional[str] = None
     pth_path:Optional[str] = None
     index_path:Optional[str] = None
@@ -83,7 +83,6 @@ class InputRequest(BaseModel):
     protect : float
     hop_length: int
     f0method:str
-    input_path:str  
     split_audio:bool
     f0autotune:bool
     clean_audio:bool

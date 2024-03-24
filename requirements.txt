@@ -49,3 +49,4 @@ pydantic
 fastapi
 uvicorn
 websockets
+python-multipart

@@ -185,7 +185,6 @@ Make POST requests to these endpoints with the same required parameters as in CL
   "protect": 0.33,
   "hop_length": 128,
   "f0method": "rmvpe",
-  "input_path": "https://firebasestorage.googleapis.com/v0/b/intenrship-e76b3.appspot.com/o/LJ001-0001.wav?alt=media&token=37bf871f-f2f2-4807-a37f-b5f297151877",
   "split_audio": True,
   "f0autotune": True,
   "clean_audio": True,
@@ -195,7 +194,7 @@ Make POST requests to these endpoints with the same required parameters as in CL
 
  # Batch Infer
 
- {
+{
   "f0up_key": 0,
   "filter_radius": 3,
   "index_rate": 0.0,
