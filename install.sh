@@ -1,6 +1,5 @@
 #!/bin/bash
 
-python3 -m venv venv
-source venv/bin/activate
-
+conda create -n rvc python=3.10 anaconda
+conda actiate rvc
 pip install -r requirements.txt

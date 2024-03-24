@@ -4,7 +4,7 @@
 
 ### Installation
 
-Ensure that you have the necessary Python packages installed by following these steps (Python 3.9 is recommended):
+Ensure that you have the necessary Python packages installed by following these steps (Python 3.10 is recommended):
 
 #### Windows
 
@@ -13,8 +13,9 @@ Execute the [install.bat](./install.bat) file to activate a Conda environment. A
 #### Linux
 
 ```bash
-chmod +x install.sh
-./install.sh
+conda create -n rvc python=3.10 anaconda
+conda actiate rvc
+pip install -r requirements.txt
 
 cd rvc/lib/tools
 python3 prerequisites_download.py 

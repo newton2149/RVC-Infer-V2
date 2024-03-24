@@ -26,7 +26,7 @@ def test_stream_wav():
     }
 
     # Define the path to the audio file to be uploaded
-    file_path = "/home/navneeth/EgoPro/dnn/RVC_CLI/test-wavs/LJ001-0001.wav"
+    file_path = "./test-wavs/LJ001-0001.wav"
 
     # Create a dictionary with the data and file to be sent
     files = {
@@ -40,10 +40,10 @@ def test_stream_wav():
 
 
     if response.status_code == 200:
-        with open("streamed_audio2.wav", "wb") as f:
+        with open("streamed_audio3.wav", "wb") as f:
             for chunk in response.iter_content(chunk_size=1024):
                 f.write(chunk)
-        print("WAV file streamed successfully and saved as 'streamed_audio.wav'")
+        print("WAV file streamed successfully and saved as 'streamed_audio.wav")
     else:
         print("Failed to stream WAV file:", response.status_code)
 
