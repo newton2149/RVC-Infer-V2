@@ -3,7 +3,8 @@
 *.onnx
 *pth
 *.pyc
-
+.env
 logs
-env
+.env
 venv
+config/*.json
