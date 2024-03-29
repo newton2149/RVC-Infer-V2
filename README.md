@@ -181,6 +181,7 @@ To use the RVC CLI via the API, utilize the provided script. Make API requests t
 - **Extract**: `/extract`
 - **Train**: `/train`
 - **Index**: `/index`
+- **Job Status**: `/jobs/`
 
 
 Make POST requests to these endpoints with the same required parameters as in CLI mode.
@@ -205,6 +206,8 @@ Make POST requests to these endpoints with the same required parameters as in CL
  }
 
  # Batch Infer
+
+#### batch Infer API Will return a token and you can use it in the jobs to get status of the job and result
 
 {
   "f0up_key": 0,
