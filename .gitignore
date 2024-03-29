@@ -7,4 +7,3 @@
 logs
 .env
 venv
-config/*.json
