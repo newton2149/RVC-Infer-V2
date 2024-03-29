@@ -3,7 +3,7 @@
 *.onnx
 *pth
 *.pyc
-
+.env
 logs
 env
 venv

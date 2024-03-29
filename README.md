@@ -4,8 +4,18 @@
 
 ### Installation
 
-Ensure that you have the necessary Python packages installed by following these steps (Python 3.10 is recommended):
+Ensure that you have the necessary Python packages installed by following these steps (Python 3.10 is recommended)
 
+Install PostGres SQL
+
+(https://www.postgresql.org/download/linux/ubuntu/)
+
+Create .env file in the project directory with the following
+
+```bash
+DATABASE_URL=postgresql://user:password@localhost/dbname
+SECRET_KEY=mysecretkey
+```
 #### Windows
 
 Execute the [install.bat](./install.bat) file to activate a Conda environment. Afterward, launch the application using `env/python main.py` instead of the conventional `python main.py` command.
@@ -19,6 +29,7 @@ pip install -r requirements.txt
 
 cd rvc/lib/tools
 python3 prerequisites_download.py 
+
 ```
 
 ### Inference

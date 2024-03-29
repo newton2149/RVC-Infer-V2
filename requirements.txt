@@ -50,3 +50,7 @@ fastapi
 uvicorn
 websockets
 python-multipart
+psycopg2
+firebase-admin 
+google-cloud-storage
+python-dotenv
